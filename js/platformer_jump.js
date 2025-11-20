@@ -978,8 +978,10 @@ function draw() {
 canvas.addEventListener('mousemove', (e) => {
     if (gameOverAnimation) {
         const rect = canvas.getBoundingClientRect();
-        const mouseX = e.clientX - rect.left;
-        const mouseY = e.clientY - rect.top;
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        const mouseX = (e.clientX - rect.left) * scaleX;
+        const mouseY = (e.clientY - rect.top) * scaleY;
         
         const buttonX = canvas.width / 2 - 120;
         const buttonY = gameOverY + 260;
@@ -999,9 +1001,24 @@ canvas.addEventListener('mousemove', (e) => {
 });
 
 // 캔버스 클릭으로 재시작
-canvas.addEventListener('click', () => {
+canvas.addEventListener('click', (e) => {
     if (gameOverAnimation) {
-        restartGame();
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        const mouseX = (e.clientX - rect.left) * scaleX;
+        const mouseY = (e.clientY - rect.top) * scaleY;
+        
+        const buttonX = canvas.width / 2 - 120;
+        const buttonY = gameOverY + 260;
+        const buttonWidth = 240;
+        const buttonHeight = 50;
+        
+        // 버튼 영역 클릭 시에만 재시작
+        if (mouseX >= buttonX && mouseX <= buttonX + buttonWidth &&
+            mouseY >= buttonY && mouseY <= buttonY + buttonHeight) {
+            restartGame();
+        }
     }
 });
 
